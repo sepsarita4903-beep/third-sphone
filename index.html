@@ -1,0 +1,104 @@
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Third's Phone</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#111;color:white;font-family:-apple-system,BlinkMacSystemFont,sans-serif;display:grid;place-items:center;min-height:100vh;padding:15px}
+.phone{width:min(390px,100%);height:min(820px,92vh);min-height:560px;border:5px solid #444;border-radius:48px;overflow:hidden;position:relative;background:linear-gradient(145deg,#243d56,#8b789f,#e9b7c6);box-shadow:0 20px 60px #0008}
+.status{height:45px;padding:14px 25px;display:flex;justify-content:space-between;font-size:13px;font-weight:bold}
+.island{position:absolute;top:8px;left:50%;transform:translateX(-50%);width:105px;height:28px;background:#050505;border-radius:20px}
+.screen{padding:65px 22px 20px;text-align:center}
+.date{font-size:17px}
+.clock{font-size:76px;font-weight:200;letter-spacing:-4px;margin:5px 0 25px}
+.card{padding:18px;background:#ffffff28;border:1px solid #ffffff35;backdrop-filter:blur(15px);border-radius:22px;text-align:left;margin-bottom:24px}
+.card p{font-size:13px;line-height:1.6}
+.apps{display:grid;grid-template-columns:repeat(3,1fr);gap:24px 10px}
+.app{border:0;background:transparent;color:white;display:flex;align-items:center;flex-direction:column;gap:7px;font-size:12px}
+.icon{height:57px;width:57px;border-radius:17px;display:grid;place-items:center;font-size:28px;box-shadow:0 5px 12px #0002}
+.dock{position:absolute;bottom:22px;left:15px;right:15px;padding:12px;background:#ffffff35;border-radius:25px;display:flex;justify-content:space-around}
+.dock .icon{height:49px;width:49px}
+.page{display:none;position:absolute;inset:0;background:#f5f5f7;color:#222;padding:55px 17px 30px;overflow:auto}
+.page h2{margin-top:8px}
+.back{background:transparent;color:#087cff;font-size:16px;padding:5px 0}
+.item{background:white;border-radius:15px;padding:14px;margin:12px 0}
+.bubble{padding:11px 14px;border-radius:18px;background:#e5e5eb;margin:10px 0;max-width:85%;font-size:14px}
+.bubble.me{background:#087cff;color:white;margin-left:auto}
+textarea{width:100%;height:180px;border:0;background:white;font:16px inherit;resize:vertical}
+button{cursor:pointer}
+</style>
+</head>
+<body>
+<div class="phone">
+<div class="status"><span id="small">9:41</span><span>● ● ▰</span></div>
+<div class="island"></div>
+<main class="screen" id="home">
+<div class="date" id="date">Welcome back</div>
+<div class="clock" id="clock">9:41</div>
+<div class="card"><b>Third's Phone ♡</b><p>จรัสเดชา · Personal Device</p><p>ยินดีต้อนรับกลับมา วันนี้ก็อย่าลืมดูแลตัวเองนะ</p></div>
+<div class="apps">
+<button class="app" onclick="openPage('messages')"><span class="icon" style="background:#32cd69">💬</span>ข้อความ</button>
+<button class="app" onclick="openPage('photos')"><span class="icon" style="background:white">🌈</span>รูปภาพ</button>
+<button class="app" onclick="openPage('music')"><span class="icon" style="background:#d74c9b">♫</span>เพลง</button>
+<button class="app" onclick="openPage('notes')"><span class="icon" style="background:#ffe16a">📝</span>โน้ต</button>
+<button class="app" onclick="openPage('social')"><span class="icon" style="background:#a16bea">◎</span>โซเชียล</button>
+<button class="app" onclick="openPage('settings')"><span class="icon" style="background:#aab2bc">⚙️</span>ตั้งค่า</button>
+</div>
+</main>
+<div class="dock" id="dock">
+<button class="app" onclick="openPage('messages')"><span class="icon" style="background:#32cd69">💬</span></button>
+<button class="app" onclick="openPage('photos')"><span class="icon" style="background:white">🌈</span></button>
+<button class="app" onclick="openPage('music')"><span class="icon" style="background:#d74c9b">♫</span></button>
+</div>
+<section class="page" id="page">
+<button class="back" onclick="goHome()">‹ หน้าจอหลัก</button>
+<div id="body"></div>
+</section>
+</div>
+<script>
+function updateClock(){
+const d=new Date();
+const t=d.toLocaleTimeString('th-TH',{hour:'2-digit',minute:'2-digit',hour12:false});
+document.getElementById('clock').textContent=t;
+document.getElementById('small').textContent=t;
+document.getElementById('date').textContent=d.toLocaleDateString('th-TH',{weekday:'long',day:'numeric',month:'long'});
+}
+updateClock();setInterval(updateClock,30000);
+function openPage(name){
+document.getElementById('home').style.display='none';
+document.getElementById('dock').style.display='none';
+document.getElementById('page').style.display='block';
+const b=document.getElementById('body');
+if(name==='messages'){
+b.innerHTML='<h2>ข้อความ</h2><div class="item"><b>เพื่อนสนิท</b><p>ถึงบ้านหรือยัง</p><div id="chat"></div><input id="msg" placeholder="พิมพ์ข้อความ..." style="width:70%;padding:10px"><button onclick="send()">ส่ง</button></div><div class="item">แม่ · อย่าลืมกินข้าวนะ ♡</div>';
+}else if(name==='photos'){
+b.innerHTML='<h2>รูปภาพ</h2><p>ความทรงจำของเติร์ด</p><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:5px">'+Array.from({length:18},(_,i)=>'<div style="aspect-ratio:1;background:'+(i%2?'#d7c3e9':'#f0c4d2')+';border-radius:8px;display:grid;place-items:center;font-size:25px">'+['🌸','☁️','🌅','🎧','🌷','✨'][i%6]+'</div>').join('')+'</div>';
+}else if(name==='music'){
+b.innerHTML='<h2>เพลงของเติร์ด</h2><div class="item" style="text-align:center;padding:35px">🎵<h3 id="song">เพลงโปรด ♡</h3><button onclick="document.getElementById(\\'song\\').textContent=\\'กำลังเล่นเพลงจำลอง ♫\\'">▶ เล่น</button><p>ตัวอย่างหน้าจอเพลง ไม่มีเสียงจริง</p></div>';
+}else if(name==='notes'){
+b.innerHTML='<h2>โน้ต</h2><div class="item"><textarea id="note" placeholder="เขียนบันทึกของคุณ..."></textarea><p>บันทึกไว้ในหน้านี้ขณะเปิดใช้งาน</p></div>';
+}else if(name==='social'){
+b.innerHTML='<h2>โซเชียล</h2><div class="item"><b>third.j</b><p>วันนี้ท้องฟ้าสวยมาก ☁️</p>♡ 128 likes</div><div class="item"><b>third.j</b><p>เก็บวันนี้ไว้เป็นความทรงจำ ✨</p>♡ 96 likes</div>';
+}else{
+b.innerHTML='<h2>การตั้งค่า</h2><div class="item">วอลเปเปอร์</div><button onclick="document.querySelector(\\'.phone\\').style.background=\\'linear-gradient(140deg,#d7e9d3,#8bb3b9)\\'">🌿 สีเขียว</button> <button onclick="document.querySelector(\\'.phone\\').style.background=\\'linear-gradient(140deg,#111827,#485b92)\\'">🌌 สีน้ำเงิน</button>';
+}
+}
+function goHome(){
+document.getElementById('page').style.display='none';
+document.getElementById('home').style.display='block';
+document.getElementById('dock').style.display='flex';
+}
+function send(){
+const input=document.getElementById('msg');
+if(!input||!input.value.trim())return;
+const chat=document.getElementById('chat');
+chat.innerHTML+='<div class="bubble me"></div><div class="bubble">โอเคเลยย 🤍</div>';
+chat.lastElementChild.previousElementSibling.textContent=input.value;
+input.value='';
+}
+</script>
+</body>
+</html>
